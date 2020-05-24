@@ -1,0 +1,2443 @@
+diff -Naur a/create.c b/create.c
+--- a/create.c	2008-04-05 06:14:46.000000000 +1000
++++ b/create.c	2020-05-24 16:12:05.845107212 +1000
+@@ -107,10 +107,12 @@
+    * Make sure that the assignment below can't be optimised out by the compiler.
+    * This is assured by conditionally assigning *tid again at the end.
+    */
++  /*
+   if (tid != NULL)
+     {
+       tid->x = 0;
+     }
++   */
+ 
+   if (attr != NULL)
+     {
+@@ -121,12 +123,12 @@
+       a = NULL;
+     }
+ 
+-  if ((thread = pte_new ()).p == NULL)
++  if ((thread = pte_new ()) == NULL)
+     {
+       goto FAIL0;
+     }
+ 
+-  tp = (pte_thread_t *) thread.p;
++  tp = (pte_thread_t *) thread;
+ 
+   priority = tp->sched_priority;
+ 
+@@ -167,7 +169,7 @@
+            * system adjustment. This is not the case for POSIX threads.
+            */
+           self = pthread_self ();
+-          priority = ((pte_thread_t *) self.p)->sched_priority;
++          priority = ((pte_thread_t *) self)->sched_priority;
+         }
+ 
+ 
+diff -Naur a/doc/Doxyfile b/doc/Doxyfile
+--- a/doc/Doxyfile	1970-01-01 10:00:00.000000000 +1000
++++ b/doc/Doxyfile	2020-05-24 16:12:05.845107212 +1000
+@@ -0,0 +1,281 @@
++# Doxyfile 1.5.3
++
++#---------------------------------------------------------------------------
++# Project related configuration options
++#---------------------------------------------------------------------------
++DOXYFILE_ENCODING      = UTF-8
++PROJECT_NAME           = PTE
++PROJECT_NUMBER         = 
++OUTPUT_DIRECTORY       = 
++CREATE_SUBDIRS         = NO
++OUTPUT_LANGUAGE        = English
++BRIEF_MEMBER_DESC      = YES
++REPEAT_BRIEF           = YES
++ABBREVIATE_BRIEF       = "The $name class  " \
++                         "The $name widget  " \
++                         "The $name file  " \
++                         is \
++                         provides \
++                         specifies \
++                         contains \
++                         represents \
++                         a \
++                         an \
++                         the
++ALWAYS_DETAILED_SEC    = NO
++INLINE_INHERITED_MEMB  = NO
++FULL_PATH_NAMES        = YES
++STRIP_FROM_PATH        = /home/jason/
++STRIP_FROM_INC_PATH    = 
++SHORT_NAMES            = NO
++JAVADOC_AUTOBRIEF      = NO
++QT_AUTOBRIEF           = NO
++MULTILINE_CPP_IS_BRIEF = NO
++DETAILS_AT_TOP         = NO
++INHERIT_DOCS           = YES
++SEPARATE_MEMBER_PAGES  = NO
++TAB_SIZE               = 8
++ALIASES                = 
++OPTIMIZE_OUTPUT_FOR_C  = YES
++OPTIMIZE_OUTPUT_JAVA   = NO
++BUILTIN_STL_SUPPORT    = NO
++CPP_CLI_SUPPORT        = NO
++DISTRIBUTE_GROUP_DOC   = NO
++SUBGROUPING            = YES
++#---------------------------------------------------------------------------
++# Build related configuration options
++#---------------------------------------------------------------------------
++EXTRACT_ALL            = YES
++EXTRACT_PRIVATE        = NO
++EXTRACT_STATIC         = NO
++EXTRACT_LOCAL_CLASSES  = YES
++EXTRACT_LOCAL_METHODS  = NO
++EXTRACT_ANON_NSPACES   = NO
++HIDE_UNDOC_MEMBERS     = NO
++HIDE_UNDOC_CLASSES     = NO
++HIDE_FRIEND_COMPOUNDS  = NO
++HIDE_IN_BODY_DOCS      = NO
++INTERNAL_DOCS          = NO
++CASE_SENSE_NAMES       = YES
++HIDE_SCOPE_NAMES       = NO
++SHOW_INCLUDE_FILES     = YES
++INLINE_INFO            = YES
++SORT_MEMBER_DOCS       = YES
++SORT_BRIEF_DOCS        = NO
++SORT_BY_SCOPE_NAME     = NO
++GENERATE_TODOLIST      = YES
++GENERATE_TESTLIST      = YES
++GENERATE_BUGLIST       = YES
++GENERATE_DEPRECATEDLIST= YES
++ENABLED_SECTIONS       = 
++MAX_INITIALIZER_LINES  = 30
++SHOW_USED_FILES        = YES
++SHOW_DIRECTORIES       = NO
++FILE_VERSION_FILTER    = 
++#---------------------------------------------------------------------------
++# configuration options related to warning and progress messages
++#---------------------------------------------------------------------------
++QUIET                  = NO
++WARNINGS               = YES
++WARN_IF_UNDOCUMENTED   = YES
++WARN_IF_DOC_ERROR      = YES
++WARN_NO_PARAMDOC       = NO
++WARN_FORMAT            = "$file:$line: $text  "
++WARN_LOGFILE           = 
++#---------------------------------------------------------------------------
++# configuration options related to the input files
++#---------------------------------------------------------------------------
++INPUT                  = /home/jason/Projects/pthreads/pte_generic_osal.h
++INPUT_ENCODING         = UTF-8
++FILE_PATTERNS          = *.c \
++                         *.cc \
++                         *.cxx \
++                         *.cpp \
++                         *.c++ \
++                         *.d \
++                         *.java \
++                         *.ii \
++                         *.ixx \
++                         *.ipp \
++                         *.i++ \
++                         *.inl \
++                         *.h \
++                         *.hh \
++                         *.hxx \
++                         *.hpp \
++                         *.h++ \
++                         *.idl \
++                         *.odl \
++                         *.cs \
++                         *.php \
++                         *.php3 \
++                         *.inc \
++                         *.m \
++                         *.mm \
++                         *.dox \
++                         *.py \
++                         *.C \
++                         *.CC \
++                         *.C++ \
++                         *.II \
++                         *.I++ \
++                         *.H \
++                         *.HH \
++                         *.H++ \
++                         *.CS \
++                         *.PHP \
++                         *.PHP3 \
++                         *.M \
++                         *.MM \
++                         *.PY
++RECURSIVE              = NO
++EXCLUDE                = 
++EXCLUDE_SYMLINKS       = NO
++EXCLUDE_PATTERNS       = 
++EXCLUDE_SYMBOLS        = 
++EXAMPLE_PATH           = 
++EXAMPLE_PATTERNS       = *
++EXAMPLE_RECURSIVE      = NO
++IMAGE_PATH             = 
++INPUT_FILTER           = 
++FILTER_PATTERNS        = 
++FILTER_SOURCE_FILES    = NO
++#---------------------------------------------------------------------------
++# configuration options related to source browsing
++#---------------------------------------------------------------------------
++SOURCE_BROWSER         = NO
++INLINE_SOURCES         = NO
++STRIP_CODE_COMMENTS    = YES
++REFERENCED_BY_RELATION = YES
++REFERENCES_RELATION    = YES
++REFERENCES_LINK_SOURCE = YES
++USE_HTAGS              = NO
++VERBATIM_HEADERS       = YES
++#---------------------------------------------------------------------------
++# configuration options related to the alphabetical class index
++#---------------------------------------------------------------------------
++ALPHABETICAL_INDEX     = NO
++COLS_IN_ALPHA_INDEX    = 5
++IGNORE_PREFIX          = 
++#---------------------------------------------------------------------------
++# configuration options related to the HTML output
++#---------------------------------------------------------------------------
++GENERATE_HTML          = YES
++HTML_OUTPUT            = html
++HTML_FILE_EXTENSION    = .html
++HTML_HEADER            = /home/jason/Temp/header.txt
++HTML_FOOTER            = 
++HTML_STYLESHEET        = 
++HTML_ALIGN_MEMBERS     = YES
++GENERATE_HTMLHELP      = YES
++HTML_DYNAMIC_SECTIONS  = YES
++CHM_FILE               = 
++HHC_LOCATION           = 
++GENERATE_CHI           = NO
++BINARY_TOC             = NO
++TOC_EXPAND             = NO
++DISABLE_INDEX          = NO
++ENUM_VALUES_PER_LINE   = 4
++GENERATE_TREEVIEW      = NO
++TREEVIEW_WIDTH         = 250
++#---------------------------------------------------------------------------
++# configuration options related to the LaTeX output
++#---------------------------------------------------------------------------
++GENERATE_LATEX         = YES
++LATEX_OUTPUT           = latex
++LATEX_CMD_NAME         = latex
++MAKEINDEX_CMD_NAME     = makeindex
++COMPACT_LATEX          = NO
++PAPER_TYPE             = a4wide
++EXTRA_PACKAGES         = 
++LATEX_HEADER           = 
++PDF_HYPERLINKS         = NO
++USE_PDFLATEX           = NO
++LATEX_BATCHMODE        = NO
++LATEX_HIDE_INDICES     = NO
++#---------------------------------------------------------------------------
++# configuration options related to the RTF output
++#---------------------------------------------------------------------------
++GENERATE_RTF           = NO
++RTF_OUTPUT             = rtf
++COMPACT_RTF            = NO
++RTF_HYPERLINKS         = NO
++RTF_STYLESHEET_FILE    = 
++RTF_EXTENSIONS_FILE    = 
++#---------------------------------------------------------------------------
++# configuration options related to the man page output
++#---------------------------------------------------------------------------
++GENERATE_MAN           = NO
++MAN_OUTPUT             = man
++MAN_EXTENSION          = .3
++MAN_LINKS              = NO
++#---------------------------------------------------------------------------
++# configuration options related to the XML output
++#---------------------------------------------------------------------------
++GENERATE_XML           = NO
++XML_OUTPUT             = xml
++XML_SCHEMA             = 
++XML_DTD                = 
++XML_PROGRAMLISTING     = YES
++#---------------------------------------------------------------------------
++# configuration options for the AutoGen Definitions output
++#---------------------------------------------------------------------------
++GENERATE_AUTOGEN_DEF   = NO
++#---------------------------------------------------------------------------
++# configuration options related to the Perl module output
++#---------------------------------------------------------------------------
++GENERATE_PERLMOD       = NO
++PERLMOD_LATEX          = NO
++PERLMOD_PRETTY         = YES
++PERLMOD_MAKEVAR_PREFIX = 
++#---------------------------------------------------------------------------
++# Configuration options related to the preprocessor   
++#---------------------------------------------------------------------------
++ENABLE_PREPROCESSING   = YES
++MACRO_EXPANSION        = NO
++EXPAND_ONLY_PREDEF     = NO
++SEARCH_INCLUDES        = YES
++INCLUDE_PATH           = 
++INCLUDE_FILE_PATTERNS  = 
++PREDEFINED             = 
++EXPAND_AS_DEFINED      = 
++SKIP_FUNCTION_MACROS   = YES
++#---------------------------------------------------------------------------
++# Configuration::additions related to external references   
++#---------------------------------------------------------------------------
++TAGFILES               = 
++GENERATE_TAGFILE       = 
++ALLEXTERNALS           = NO
++EXTERNAL_GROUPS        = YES
++PERL_PATH              = /usr/bin/perl
++#---------------------------------------------------------------------------
++# Configuration options related to the dot tool   
++#---------------------------------------------------------------------------
++CLASS_DIAGRAMS         = YES
++MSCGEN_PATH            = 
++HIDE_UNDOC_RELATIONS   = YES
++HAVE_DOT               = YES
++CLASS_GRAPH            = YES
++COLLABORATION_GRAPH    = YES
++GROUP_GRAPHS           = YES
++UML_LOOK               = NO
++TEMPLATE_RELATIONS     = NO
++INCLUDE_GRAPH          = YES
++INCLUDED_BY_GRAPH      = YES
++CALL_GRAPH             = NO
++CALLER_GRAPH           = NO
++GRAPHICAL_HIERARCHY    = YES
++DIRECTORY_GRAPH        = YES
++DOT_IMAGE_FORMAT       = png
++DOT_PATH               = 
++DOTFILE_DIRS           = 
++DOT_GRAPH_MAX_NODES    = 50
++MAX_DOT_GRAPH_DEPTH    = 1000
++DOT_TRANSPARENT        = NO
++DOT_MULTI_TARGETS      = NO
++GENERATE_LEGEND        = YES
++DOT_CLEANUP            = YES
++#---------------------------------------------------------------------------
++# Configuration::additions related to the search engine   
++#---------------------------------------------------------------------------
++SEARCHENGINE           = NO
+diff -Naur a/doc/doxygen.css b/doc/doxygen.css
+--- a/doc/doxygen.css	1970-01-01 10:00:00.000000000 +1000
++++ b/doc/doxygen.css	2020-05-24 16:12:05.845107212 +1000
+@@ -0,0 +1,358 @@
++BODY,H1,H2,H3,H4,H5,H6,P,CENTER,TD,TH,UL,DL,DIV {
++	font-family: Geneva, Arial, Helvetica, sans-serif;
++}
++BODY,TD {
++       font-size: 90%;
++}
++H1 {
++	text-align: center;
++       font-size: 160%;
++}
++H2 {
++       font-size: 120%;
++}
++H3 {
++       font-size: 100%;
++}
++CAPTION { font-weight: bold }
++DIV.qindex {
++	width: 100%;
++	background-color: #e8eef2;
++	border: 1px solid #84b0c7;
++	text-align: center;
++	margin: 2px;
++	padding: 2px;
++	line-height: 140%;
++}
++DIV.nav {
++	width: 100%;
++	background-color: #e8eef2;
++	border: 1px solid #84b0c7;
++	text-align: center;
++	margin: 2px;
++	padding: 2px;
++	line-height: 140%;
++}
++DIV.navtab {
++       background-color: #e8eef2;
++       border: 1px solid #84b0c7;
++       text-align: center;
++       margin: 2px;
++       margin-right: 15px;
++       padding: 2px;
++}
++TD.navtab {
++       font-size: 70%;
++}
++A.qindex {
++       text-decoration: none;
++       font-weight: bold;
++       color: #1A419D;
++}
++A.qindex:visited {
++       text-decoration: none;
++       font-weight: bold;
++       color: #1A419D
++}
++A.qindex:hover {
++	text-decoration: none;
++	background-color: #ddddff;
++}
++A.qindexHL {
++	text-decoration: none;
++	font-weight: bold;
++	background-color: #6666cc;
++	color: #ffffff;
++	border: 1px double #9295C2;
++}
++A.qindexHL:hover {
++	text-decoration: none;
++	background-color: #6666cc;
++	color: #ffffff;
++}
++A.qindexHL:visited { text-decoration: none; background-color: #6666cc; color: #ffffff }
++A.el { text-decoration: none; font-weight: bold }
++A.elRef { font-weight: bold }
++A.code:link { text-decoration: none; font-weight: normal; color: #0000FF}
++A.code:visited { text-decoration: none; font-weight: normal; color: #0000FF}
++A.codeRef:link { font-weight: normal; color: #0000FF}
++A.codeRef:visited { font-weight: normal; color: #0000FF}
++A:hover { text-decoration: none; background-color: #f2f2ff }
++DL.el { margin-left: -1cm }
++.fragment {
++       font-family: monospace, fixed;
++       font-size: 95%;
++}
++PRE.fragment {
++	border: 1px solid #CCCCCC;
++	background-color: #f5f5f5;
++	margin-top: 4px;
++	margin-bottom: 4px;
++	margin-left: 2px;
++	margin-right: 8px;
++	padding-left: 6px;
++	padding-right: 6px;
++	padding-top: 4px;
++	padding-bottom: 4px;
++}
++DIV.ah { background-color: black; font-weight: bold; color: #ffffff; margin-bottom: 3px; margin-top: 3px }
++
++DIV.groupHeader {
++       margin-left: 16px;
++       margin-top: 12px;
++       margin-bottom: 6px;
++       font-weight: bold;
++}
++DIV.groupText { margin-left: 16px; font-style: italic; font-size: 90% }
++BODY {
++	background: white;
++	color: black;
++	margin-right: 20px;
++	margin-left: 20px;
++}
++TD.indexkey {
++	background-color: #e8eef2;
++	font-weight: bold;
++	padding-right  : 10px;
++	padding-top    : 2px;
++	padding-left   : 10px;
++	padding-bottom : 2px;
++	margin-left    : 0px;
++	margin-right   : 0px;
++	margin-top     : 2px;
++	margin-bottom  : 2px;
++	border: 1px solid #CCCCCC;
++}
++TD.indexvalue {
++	background-color: #e8eef2;
++	font-style: italic;
++	padding-right  : 10px;
++	padding-top    : 2px;
++	padding-left   : 10px;
++	padding-bottom : 2px;
++	margin-left    : 0px;
++	margin-right   : 0px;
++	margin-top     : 2px;
++	margin-bottom  : 2px;
++	border: 1px solid #CCCCCC;
++}
++TR.memlist {
++   background-color: #f0f0f0; 
++}
++P.formulaDsp { text-align: center; }
++IMG.formulaDsp { }
++IMG.formulaInl { vertical-align: middle; }
++SPAN.keyword       { color: #008000 }
++SPAN.keywordtype   { color: #604020 }
++SPAN.keywordflow   { color: #e08000 }
++SPAN.comment       { color: #800000 }
++SPAN.preprocessor  { color: #806020 }
++SPAN.stringliteral { color: #002080 }
++SPAN.charliteral   { color: #008080 }
++.mdescLeft {
++       padding: 0px 8px 4px 8px;
++	font-size: 80%;
++	font-style: italic;
++	background-color: #FAFAFA;
++	border-top: 1px none #E0E0E0;
++	border-right: 1px none #E0E0E0;
++	border-bottom: 1px none #E0E0E0;
++	border-left: 1px none #E0E0E0;
++	margin: 0px;
++}
++.mdescRight {
++       padding: 0px 8px 4px 8px;
++	font-size: 80%;
++	font-style: italic;
++	background-color: #FAFAFA;
++	border-top: 1px none #E0E0E0;
++	border-right: 1px none #E0E0E0;
++	border-bottom: 1px none #E0E0E0;
++	border-left: 1px none #E0E0E0;
++	margin: 0px;
++}
++.memItemLeft {
++	padding: 1px 0px 0px 8px;
++	margin: 4px;
++	border-top-width: 1px;
++	border-right-width: 1px;
++	border-bottom-width: 1px;
++	border-left-width: 1px;
++	border-top-color: #E0E0E0;
++	border-right-color: #E0E0E0;
++	border-bottom-color: #E0E0E0;
++	border-left-color: #E0E0E0;
++	border-top-style: solid;
++	border-right-style: none;
++	border-bottom-style: none;
++	border-left-style: none;
++	background-color: #FAFAFA;
++	font-size: 80%;
++}
++.memItemRight {
++	padding: 1px 8px 0px 8px;
++	margin: 4px;
++	border-top-width: 1px;
++	border-right-width: 1px;
++	border-bottom-width: 1px;
++	border-left-width: 1px;
++	border-top-color: #E0E0E0;
++	border-right-color: #E0E0E0;
++	border-bottom-color: #E0E0E0;
++	border-left-color: #E0E0E0;
++	border-top-style: solid;
++	border-right-style: none;
++	border-bottom-style: none;
++	border-left-style: none;
++	background-color: #FAFAFA;
++	font-size: 80%;
++}
++.memTemplItemLeft {
++	padding: 1px 0px 0px 8px;
++	margin: 4px;
++	border-top-width: 1px;
++	border-right-width: 1px;
++	border-bottom-width: 1px;
++	border-left-width: 1px;
++	border-top-color: #E0E0E0;
++	border-right-color: #E0E0E0;
++	border-bottom-color: #E0E0E0;
++	border-left-color: #E0E0E0;
++	border-top-style: none;
++	border-right-style: none;
++	border-bottom-style: none;
++	border-left-style: none;
++	background-color: #FAFAFA;
++	font-size: 80%;
++}
++.memTemplItemRight {
++	padding: 1px 8px 0px 8px;
++	margin: 4px;
++	border-top-width: 1px;
++	border-right-width: 1px;
++	border-bottom-width: 1px;
++	border-left-width: 1px;
++	border-top-color: #E0E0E0;
++	border-right-color: #E0E0E0;
++	border-bottom-color: #E0E0E0;
++	border-left-color: #E0E0E0;
++	border-top-style: none;
++	border-right-style: none;
++	border-bottom-style: none;
++	border-left-style: none;
++	background-color: #FAFAFA;
++	font-size: 80%;
++}
++.memTemplParams {
++	padding: 1px 0px 0px 8px;
++	margin: 4px;
++	border-top-width: 1px;
++	border-right-width: 1px;
++	border-bottom-width: 1px;
++	border-left-width: 1px;
++	border-top-color: #E0E0E0;
++	border-right-color: #E0E0E0;
++	border-bottom-color: #E0E0E0;
++	border-left-color: #E0E0E0;
++	border-top-style: solid;
++	border-right-style: none;
++	border-bottom-style: none;
++	border-left-style: none;
++       color: #606060;
++	background-color: #FAFAFA;
++	font-size: 80%;
++}
++.search     { color: #003399;
++              font-weight: bold;
++}
++FORM.search {
++              margin-bottom: 0px;
++              margin-top: 0px;
++}
++INPUT.search { font-size: 75%;
++               color: #000080;
++               font-weight: normal;
++               background-color: #e8eef2;
++}
++TD.tiny      { font-size: 75%;
++}
++a {
++	color: #1A41A8;
++}
++a:visited {
++	color: #2A3798;
++}
++.dirtab { padding: 4px;
++          border-collapse: collapse;
++          border: 1px solid #84b0c7;
++}
++TH.dirtab { background: #e8eef2;
++            font-weight: bold;
++}
++HR { height: 1px;
++     border: none;
++     border-top: 1px solid black;
++}
++
++/* Style for detailed member documentation */
++.memtemplate {
++  font-size: 80%;
++  color: #606060;
++  font-weight: normal;
++} 
++.memnav { 
++  background-color: #e8eef2;
++  border: 1px solid #84b0c7;
++  text-align: center;
++  margin: 2px;
++  margin-right: 15px;
++  padding: 2px;
++}
++.memitem {
++  padding: 4px;
++  background-color: #eef3f5;
++  border-width: 1px;
++  border-style: solid;
++  border-color: #dedeee;
++  -moz-border-radius: 8px 8px 8px 8px;
++}
++.memname {
++  white-space: nowrap;
++  font-weight: bold;
++}
++.memdoc{
++  padding-left: 10px;
++}
++.memproto {
++  background-color: #d5e1e8;
++  width: 100%;
++  border-width: 1px;
++  border-style: solid;
++  border-color: #84b0c7;
++  font-weight: bold;
++  -moz-border-radius: 8px 8px 8px 8px;
++}
++.paramkey {
++  text-align: right;
++}
++.paramtype {
++  white-space: nowrap;
++}
++.paramname {
++  color: #602020;
++  font-style: italic;
++  white-space: nowrap;
++}
++/* End Styling for detailed member documentation */
++
++/* for the tree view */
++.ftvtree {
++	font-family: sans-serif;
++	margin:0.5em;
++}
++.directory { font-size: 9pt; font-weight: bold; }
++.directory h3 { margin: 0px; margin-top: 1em; font-size: 11pt; }
++.directory > h3 { margin-top: 0; }
++.directory p { margin: 0px; white-space: nowrap; }
++.directory div { display: none; margin: 0px; }
++.directory img { vertical-align: -30%; }
+diff -Naur a/doc/pte_main.html b/doc/pte_main.html
+--- a/doc/pte_main.html	2008-04-05 14:04:53.000000000 +1000
++++ b/doc/pte_main.html	2020-05-24 16:12:05.845107212 +1000
+@@ -9,4 +9,4 @@
+ do not natively provide a pthreads API. PTE is designed to be easily
+ portable to such operating systems and only relies on basic primitives
+ (e.g. semaphores) that are widely supported on most embedded operating
+-systems.<br><br>Currently, PTE has been ported to Texas Instrument's DSP/BIOS and Sony's PSP OS.<br><br><a href="http://sourceforge.net/project/showfiles.php?group_id=213842">Download</a><br><a href="mailto:jschmidlapp@users.sourceforge.net">Contact</a><span style="font-weight: bold;"><br><br><big>Documentation</big><br></span><a href="pte_users_guide.html">User's Manual</a><span style="font-weight: bold;"><span style="font-weight: bold;"><span style="font-weight: bold;"><br></span></span></span><a href="pte_porting_guide.html">Porting Guide</a><br><a href="pte_dspbios.html">Notes on DSP/BIOS port</a><br><a href="pte_psp.html">Notes on PSP OS port</a><span style="font-weight: bold;"><span style="font-weight: bold;"><span style="font-weight: bold;"><br><br><br></span></span><br><br></span></small></small></big></big></big></body></html>
+\ No newline at end of file
++systems.<br><br>Currently, PTE has been ported to Texas Instrument's DSP/BIOS and Sony's PSP OS.<br><br>PTE is based heavily on <a href="http://sourceware.org/pthreads-win32/">Pthreads Win32</a>, and implementation of pthreads for Windows. <br><br><a href="http://sourceforge.net/project/showfiles.php?group_id=213842">Download</a><br><a href="mailto:jschmidlapp@users.sourceforge.net">Contact</a><span style="font-weight: bold;"><br><br><big>Documentation</big><br></span><a href="pte_users_guide.html">User's Manual</a><span style="font-weight: bold;"><span style="font-weight: bold;"><span style="font-weight: bold;"><br></span></span></span><a href="pte_porting_guide.html">Porting Guide</a><br><a href="pte_dspbios.html">Notes on DSP/BIOS port</a><br><a href="pte_psp.html">Notes on PSP OS port</a><span style="font-weight: bold;"><span style="font-weight: bold;"><span style="font-weight: bold;"><br><br><br></span></span><br><br></span></small></small></big></big></big></body></html>
+\ No newline at end of file
+diff -Naur a/doc/pte_osal_api.html b/doc/pte_osal_api.html
+--- a/doc/pte_osal_api.html	1970-01-01 10:00:00.000000000 +1000
++++ b/doc/pte_osal_api.html	2020-05-24 16:12:05.845107212 +1000
+@@ -0,0 +1,1190 @@
++<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
++<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
++<title>PTE: Projects/pthreads/pte_generic_osal.h File Reference</title>
++<link href="doxygen.css" rel="stylesheet" type="text/css">
++<link href="tabs.css" rel="stylesheet" type="text/css">
++</head><body>
++<!-- Generated by Doxygen 1.5.3 -->
++<div class="tabs">
++  <ul>
++    <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
++    <li class="current"><a href="files.html"><span>Files</span></a></li>
++  </ul>
++</div>
++<h1>Projects/pthreads/pte_generic_osal.h File Reference</h1>
++<p>
++<a href="pte__generic__osal_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
++<tr><td></td></tr>
++<tr><td colspan="2"><br><h2>Misc</h2></td></tr>
++<tr><td colspan="2"><br><br></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> { <br>
++&nbsp;&nbsp;<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b542c92113747d4c2f01ac0392346ef9a">PTE_OS_OK</a> =  0, 
++<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b917a061effd9af41eb78f673e1a1f992">PTE_OS_NO_RESOURCES</a>, 
++<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16bf245545c0574e66f040218ec4724c823">PTE_OS_GENERAL_FAILURE</a>, 
++<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16bced54c5db0dc4c60fdfae17ed6b44eed">PTE_OS_TIMEOUT</a>, 
++<br>
++&nbsp;&nbsp;<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16baabab6adc711b3215f4a45d1944b48d3">PTE_OS_INTERRUPTED</a>, 
++<a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b75103b48643227172eb796f2aa5938cc">PTE_OS_INVALID_PARAM</a>
++<br>
++ }</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#182cfe699774da3b514e11ca9c7a9beb">pte_osInit</a> (void)</td></tr>
++
++<tr><td colspan="2"><br><h2>Threads</h2></td></tr>
++<tr><td colspan="2"><br><br></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef int(*&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#351fe193de41b62d05e1aa19a3bf1a45">pte_osThreadEntryPoint</a> )(void *params)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#d1dafbe4855b28a472af00b693338a44">pte_osThreadCreate</a> (<a class="el" href="pte__generic__osal_8h.html#351fe193de41b62d05e1aa19a3bf1a45">pte_osThreadEntryPoint</a> entryPoint, int stackSize, int initialPriority, void *argv, pte_osThreadHandle *ppte_osThreadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#ab292e786c9b96e80daf8ae9dc983a72">pte_osThreadStart</a> (pte_osThreadHandle osThreadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#efffdffc7923dbbdb5b930cd24c852d1">pte_osThreadExit</a> ()</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#0bcce6dc9b22691f914b07894394ee38">pte_osThreadWaitForEnd</a> (pte_osThreadHandle threadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">pte_osThreadHandle&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#8e8f80b5c86e1357ce0b40d8333ec969">pte_osThreadGetHandle</a> (void)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#54fce783cb811dc6458ea118ab8f7f1d">pte_osThreadGetPriority</a> (pte_osThreadHandle threadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#6782a421eb6c2eb9aa60f3b7ccca1f99">pte_osThreadSetPriority</a> (pte_osThreadHandle threadHandle, int newPriority)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#685d89f40949c634169c4a7d13de4ee0">pte_osThreadDelete</a> (pte_osThreadHandle handle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#cdbcc3abdb03e1a0f6475d5c0759dac7">pte_osThreadExitAndDelete</a> (pte_osThreadHandle handle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#28ea17c5ecaaebf7f9b195a91a709e77">pte_osThreadCancel</a> (pte_osThreadHandle threadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#5b5034f6f2a2b2f124991728096a8f5d">pte_osThreadCheckCancel</a> (pte_osThreadHandle threadHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#5c722b6d1840babcdf9dd1d343eab839">pte_osThreadSleep</a> (unsigned int msecs)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#18cd3561b14611ae16682cbbbf674980">pte_osThreadGetMaxPriority</a> ()</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#913badc3cfa6b2a817c2b501d45548fc">pte_osThreadGetMinPriority</a> ()</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#b07cacaf7670707cc2741f5d9746571b">pte_osThreadGetDefaultPriority</a> ()</td></tr>
++
++<tr><td colspan="2"><br><h2>Functions</h2></td></tr>
++<tr><td colspan="2"><div class="groupHeader">Mutexes</div></td></tr>
++<tr><td colspan="2"><div class="groupText"><br><br></div></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#76af3c11297593ebd698c206176b649b">pte_osMutexCreate</a> (pte_osMutexHandle *pHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#48aa456b2215aaddfaca11189be8dcd6">pte_osMutexDelete</a> (pte_osMutexHandle handle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#299605cd2506cc0d7977c41ab3fd0e80">pte_osMutexLock</a> (pte_osMutexHandle handle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#04a769a4b8d2e2ee75f775f7a9d9291e">pte_osMutexTimedLock</a> (pte_osMutexHandle handle, unsigned int timeoutMsecs)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#f202c5379b5fb1799c6054916bb2cf3f">pte_osMutexUnlock</a> (pte_osMutexHandle handle)</td></tr>
++
++<tr><td colspan="2"><div class="groupHeader">Semaphores</div></td></tr>
++<tr><td colspan="2"><div class="groupText"><br><br></div></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#cd102e0dbc375040016bde75f94f207f">pte_osSemaphoreCreate</a> (int initialValue, pte_osSemaphoreHandle *pHandle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#868f71ff8dfb927393da6620398097ed">pte_osSemaphoreDelete</a> (pte_osSemaphoreHandle handle)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#8aa3a131d541de9815ec636e30eb4a3a">pte_osSemaphorePost</a> (pte_osSemaphoreHandle handle, int count)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#faf21b36d98f19bd780b95f475cb0a1a">pte_osSemaphorePend</a> (pte_osSemaphoreHandle handle, unsigned int *pTimeout)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#4a39bc9845ae936e01627ff67b166c47">pte_osSemaphoreCancellablePend</a> (pte_osSemaphoreHandle handle, unsigned int *pTimeout)</td></tr>
++
++<tr><td colspan="2"><div class="groupHeader">Thread Local Storage</div></td></tr>
++<tr><td colspan="2"><div class="groupText"><br><br></div></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#875ea911d219532ca4da65430e73d22e">pte_osTlsSetValue</a> (unsigned int key, void *value)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#44051eabc72d953a731c7c559d9c99c7">pte_osTlsGetValue</a> (unsigned int key)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#4369875ed4b8d89a72a9b14a811af3ad">pte_osTlsInit</a> (void)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#851a24e2dc4fe5c61e00c9dc7105d607">pte_osTlsAlloc</a> (unsigned int *pKey)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#a96a7e24fee6ba3c37c13d8429044a58">pte_osTlsFree</a> (unsigned int key)</td></tr>
++
++<tr><td colspan="2"><div class="groupHeader">Atomic operations</div></td></tr>
++<tr><td colspan="2"><div class="groupText"><br><br></div></td></tr>
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#6dc6f01fe801019dacc76222feb4c6ad">pte_osAtomicExchange</a> (int *pTarg, int val)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#26ba7b2e8dd5e78bfb6fdea89953fe81">pte_osAtomicCompareExchange</a> (int *pdest, int exchange, int comp)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#58bb5aa2308e9518159521ca6ea93b5c">pte_osAtomicExchangeAdd</a> (int volatile *pdest, int value)</td></tr>
++
++<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pte__generic__osal_8h.html#7b52fa2a4a05b2308e116040e379f532">pte_osAtomicDecrement</a> (int *pdest)</td></tr>
++
++</table>
++<hr><h2>Typedef Documentation</h2>
++<a class="anchor" name="351fe193de41b62d05e1aa19a3bf1a45"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadEntryPoint" ref="351fe193de41b62d05e1aa19a3bf1a45" args=")(void *params)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">typedef int(* <a class="el" href="pte__generic__osal_8h.html#351fe193de41b62d05e1aa19a3bf1a45">pte_osThreadEntryPoint</a>)(void *params)          </td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++
++</div>
++</div><p>
++<hr><h2>Enumeration Type Documentation</h2>
++<a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16b"></a><!-- doxytag: member="pte_generic_osal.h::pte_osResult" ref="8434ef5479b09bf1d5d1bf2eb078e16b" args="" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">enum <a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a>          </td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++<dl compact><dt><b>Enumerator: </b></dt><dd>
++<table border="0" cellspacing="2" cellpadding="0">
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16b542c92113747d4c2f01ac0392346ef9a"></a><!-- doxytag: member="PTE_OS_OK" ref="8434ef5479b09bf1d5d1bf2eb078e16b542c92113747d4c2f01ac0392346ef9a" args="" -->PTE_OS_OK</em>&nbsp;</td><td>
++Operation completed successfully </td></tr>
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16b917a061effd9af41eb78f673e1a1f992"></a><!-- doxytag: member="PTE_OS_NO_RESOURCES" ref="8434ef5479b09bf1d5d1bf2eb078e16b917a061effd9af41eb78f673e1a1f992" args="" -->PTE_OS_NO_RESOURCES</em>&nbsp;</td><td>
++Operation failed because there insufficient resources </td></tr>
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16bf245545c0574e66f040218ec4724c823"></a><!-- doxytag: member="PTE_OS_GENERAL_FAILURE" ref="8434ef5479b09bf1d5d1bf2eb078e16bf245545c0574e66f040218ec4724c823" args="" -->PTE_OS_GENERAL_FAILURE</em>&nbsp;</td><td>
++Operation failed due to a general failure </td></tr>
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16bced54c5db0dc4c60fdfae17ed6b44eed"></a><!-- doxytag: member="PTE_OS_TIMEOUT" ref="8434ef5479b09bf1d5d1bf2eb078e16bced54c5db0dc4c60fdfae17ed6b44eed" args="" -->PTE_OS_TIMEOUT</em>&nbsp;</td><td>
++Operation did not complete because a user specified timeout expired. </td></tr>
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16baabab6adc711b3215f4a45d1944b48d3"></a><!-- doxytag: member="PTE_OS_INTERRUPTED" ref="8434ef5479b09bf1d5d1bf2eb078e16baabab6adc711b3215f4a45d1944b48d3" args="" -->PTE_OS_INTERRUPTED</em>&nbsp;</td><td>
++The operation was interrupted before it could complete. </td></tr>
++<tr><td valign="top"><em><a class="anchor" name="8434ef5479b09bf1d5d1bf2eb078e16b75103b48643227172eb796f2aa5938cc"></a><!-- doxytag: member="PTE_OS_INVALID_PARAM" ref="8434ef5479b09bf1d5d1bf2eb078e16b75103b48643227172eb796f2aa5938cc" args="" -->PTE_OS_INVALID_PARAM</em>&nbsp;</td><td>
++An invalid parameter was specified </td></tr>
++</table>
++</dl>
++
++</div>
++</div><p>
++<hr><h2>Function Documentation</h2>
++<a class="anchor" name="26ba7b2e8dd5e78bfb6fdea89953fe81"></a><!-- doxytag: member="pte_generic_osal.h::pte_osAtomicCompareExchange" ref="26ba7b2e8dd5e78bfb6fdea89953fe81" args="(int *pdest, int exchange, int comp)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osAtomicCompareExchange           </td>
++          <td>(</td>
++          <td class="paramtype">int *&nbsp;</td>
++          <td class="paramname"> <em>pdest</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>exchange</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>comp</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Performs an atomic compare-and-exchange oepration on the specified value. That is:<p>
++<div class="fragment"><pre class="fragment"> origVal = *pdest
++ <span class="keywordflow">if</span> (*pdest == comp)
++   then *pdest = exchange
++ <span class="keywordflow">return</span> origVal
++</pre></div><p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pdest</em>&nbsp;</td><td>Pointer to the destination value. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>exchange</em>&nbsp;</td><td>Exchange value (value to set destination to if destination == comparand) </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>comp</em>&nbsp;</td><td>The value to compare to destination.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>Original value of destination </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="7b52fa2a4a05b2308e116040e379f532"></a><!-- doxytag: member="pte_generic_osal.h::pte_osAtomicDecrement" ref="7b52fa2a4a05b2308e116040e379f532" args="(int *pdest)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osAtomicDecrement           </td>
++          <td>(</td>
++          <td class="paramtype">int *&nbsp;</td>
++          <td class="paramname"> <em>pdest</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Decrements the destination.<p>
++<div class="fragment"><pre class="fragment"> origVal = *pdest
++ *pdest++
++ <span class="keywordflow">return</span> origVal
++</pre></div><p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pdest</em>&nbsp;</td><td>Destination value to decrement</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>Original destination value </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="6dc6f01fe801019dacc76222feb4c6ad"></a><!-- doxytag: member="pte_generic_osal.h::pte_osAtomicExchange" ref="6dc6f01fe801019dacc76222feb4c6ad" args="(int *pTarg, int val)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osAtomicExchange           </td>
++          <td>(</td>
++          <td class="paramtype">int *&nbsp;</td>
++          <td class="paramname"> <em>pTarg</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>val</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Sets the target to the specified value as an atomic operation.<p>
++<div class="fragment"><pre class="fragment"> origVal = *ptarg
++ *ptarg = val
++ <span class="keywordflow">return</span> origVal
++</pre></div><p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pTarg</em>&nbsp;</td><td>Pointer to the value to be exchanged. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>val</em>&nbsp;</td><td>Value to be exchanged</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>original value of destination </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="58bb5aa2308e9518159521ca6ea93b5c"></a><!-- doxytag: member="pte_generic_osal.h::pte_osAtomicExchangeAdd" ref="58bb5aa2308e9518159521ca6ea93b5c" args="(int volatile *pdest, int value)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osAtomicExchangeAdd           </td>
++          <td>(</td>
++          <td class="paramtype">int volatile *&nbsp;</td>
++          <td class="paramname"> <em>pdest</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>value</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Adds the value to target as an atomic operation<p>
++<div class="fragment"><pre class="fragment"> origVal = *pdest
++ *pAddend += value
++ <span class="keywordflow">return</span> origVal
++</pre></div><p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pdest</em>&nbsp;</td><td>Pointer to the variable to be updated. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>Value to be added to the variable.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>Original value of destination </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="182cfe699774da3b514e11ca9c7a9beb"></a><!-- doxytag: member="pte_generic_osal.h::pte_osInit" ref="182cfe699774da3b514e11ca9c7a9beb" args="(void)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osInit           </td>
++          <td>(</td>
++          <td class="paramtype">void&nbsp;</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Provides a hook for the OSAL to implement any OS specific initialization. This is guaranteed to be called before any other OSAL function. 
++</div>
++</div><p>
++<a class="anchor" name="76af3c11297593ebd698c206176b649b"></a><!-- doxytag: member="pte_generic_osal.h::pte_osMutexCreate" ref="76af3c11297593ebd698c206176b649b" args="(pte_osMutexHandle *pHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osMutexCreate           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osMutexHandle *&nbsp;</td>
++          <td class="paramname"> <em>pHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Creates a mutex<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pHandle</em>&nbsp;</td><td>Set to the handle of the newly created mutex.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Mutex successfully created <p>
++PTE_OS_NO_RESOURCESs - Insufficient resources to create mutex </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="48aa456b2215aaddfaca11189be8dcd6"></a><!-- doxytag: member="pte_generic_osal.h::pte_osMutexDelete" ref="48aa456b2215aaddfaca11189be8dcd6" args="(pte_osMutexHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osMutexDelete           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osMutexHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Deletes a mutex and frees any associated resources.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of mutex to delete.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Mutex successfully deleted. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="299605cd2506cc0d7977c41ab3fd0e80"></a><!-- doxytag: member="pte_generic_osal.h::pte_osMutexLock" ref="299605cd2506cc0d7977c41ab3fd0e80" args="(pte_osMutexHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osMutexLock           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osMutexHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Locks the mutex<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of mutex to lock.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Mutex successfully locked. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="04a769a4b8d2e2ee75f775f7a9d9291e"></a><!-- doxytag: member="pte_generic_osal.h::pte_osMutexTimedLock" ref="04a769a4b8d2e2ee75f775f7a9d9291e" args="(pte_osMutexHandle handle, unsigned int timeoutMsecs)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osMutexTimedLock           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osMutexHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">unsigned int&nbsp;</td>
++          <td class="paramname"> <em>timeoutMsecs</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Locks the mutex, returning after <code>timeoutMsecs</code> if the resources is not available. Can be used for polling mutex by using <code>timeoutMsecs</code> of zero.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of mutex to lock. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>timeoutMsecs</em>&nbsp;</td><td>Number of milliseconds to wait for resource before returning.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Mutex successfully locked. <p>
++PTE_OS_TIMEOUT - Timeout expired before lock was obtained. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="f202c5379b5fb1799c6054916bb2cf3f"></a><!-- doxytag: member="pte_generic_osal.h::pte_osMutexUnlock" ref="f202c5379b5fb1799c6054916bb2cf3f" args="(pte_osMutexHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osMutexUnlock           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osMutexHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Unlocks the mutex<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of mutex to unlock</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Mutex successfully unlocked. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="4a39bc9845ae936e01627ff67b166c47"></a><!-- doxytag: member="pte_generic_osal.h::pte_osSemaphoreCancellablePend" ref="4a39bc9845ae936e01627ff67b166c47" args="(pte_osSemaphoreHandle handle, unsigned int *pTimeout)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osSemaphoreCancellablePend           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osSemaphoreHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">unsigned int *&nbsp;</td>
++          <td class="paramname"> <em>pTimeout</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Acquire a semaphore, returning after <code>timeoutMsecs</code> if the semaphore is not available. Can be used for polling a semaphore by using <code>timeoutMsecs</code> of zero. Call must return immediately if <a class="el" href="pte__generic__osal_8h.html#28ea17c5ecaaebf7f9b195a91a709e77">pte_osThreadCancel()</a> is called on the thread waiting for the semaphore.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of semaphore to acquire. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>pTimeout</em>&nbsp;</td><td>Pointer to the number of milliseconds to wait to acquire the semaphore before returning. If set to NULL, wait forever.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Semaphore successfully acquired. <p>
++PTE_OS_TIMEOUT - Timeout expired before semaphore was obtained. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="cd102e0dbc375040016bde75f94f207f"></a><!-- doxytag: member="pte_generic_osal.h::pte_osSemaphoreCreate" ref="cd102e0dbc375040016bde75f94f207f" args="(int initialValue, pte_osSemaphoreHandle *pHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osSemaphoreCreate           </td>
++          <td>(</td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>initialValue</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">pte_osSemaphoreHandle *&nbsp;</td>
++          <td class="paramname"> <em>pHandle</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Creates a semaphore<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>initialValue</em>&nbsp;</td><td>Initial value of the semaphore </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>pHandle</em>&nbsp;</td><td>Set to the handle of the newly created semaphore.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Semaphore successfully created <p>
++PTE_OS_NO_RESOURCESs - Insufficient resources to create semaphore </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="868f71ff8dfb927393da6620398097ed"></a><!-- doxytag: member="pte_generic_osal.h::pte_osSemaphoreDelete" ref="868f71ff8dfb927393da6620398097ed" args="(pte_osSemaphoreHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osSemaphoreDelete           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osSemaphoreHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Deletes a semaphore and frees any associated resources.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of semaphore to delete.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Semaphore successfully deleted. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="faf21b36d98f19bd780b95f475cb0a1a"></a><!-- doxytag: member="pte_generic_osal.h::pte_osSemaphorePend" ref="faf21b36d98f19bd780b95f475cb0a1a" args="(pte_osSemaphoreHandle handle, unsigned int *pTimeout)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osSemaphorePend           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osSemaphoreHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">unsigned int *&nbsp;</td>
++          <td class="paramname"> <em>pTimeout</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Acquire a semaphore, returning after <code>timeoutMsecs</code> if the semaphore is not available. Can be used for polling a semaphore by using <code>timeoutMsecs</code> of zero.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Handle of semaphore to acquire. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>pTimeout</em>&nbsp;</td><td>Pointer to the number of milliseconds to wait to acquire the semaphore before returning. If set to NULL, wait forever.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Semaphore successfully acquired. <p>
++PTE_OS_TIMEOUT - Timeout expired before semaphore was obtained. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="8aa3a131d541de9815ec636e30eb4a3a"></a><!-- doxytag: member="pte_generic_osal.h::pte_osSemaphorePost" ref="8aa3a131d541de9815ec636e30eb4a3a" args="(pte_osSemaphoreHandle handle, int count)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osSemaphorePost           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osSemaphoreHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>count</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Posts to the semaphore<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>handle</em>&nbsp;</td><td>Semaphore to release </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>count</em>&nbsp;</td><td>Amount to increment the semaphore by.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - semaphore successfully released. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="28ea17c5ecaaebf7f9b195a91a709e77"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadCancel" ref="28ea17c5ecaaebf7f9b195a91a709e77" args="(pte_osThreadHandle threadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadCancel           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>threadHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Cancels the specified thread. This should cause <a class="el" href="pte__generic__osal_8h.html#4a39bc9845ae936e01627ff67b166c47">pte_osSemaphoreCancellablePend()</a> and for <a class="el" href="pte__generic__osal_8h.html#5b5034f6f2a2b2f124991728096a8f5d">pte_osThreadCheckCancel()</a> to return <code>PTE_OS_INTERRUPTED</code>.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>threadHandle</em>&nbsp;</td><td>handle to the thread to cancel.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>Thread successfully canceled. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="5b5034f6f2a2b2f124991728096a8f5d"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadCheckCancel" ref="5b5034f6f2a2b2f124991728096a8f5d" args="(pte_osThreadHandle threadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadCheckCancel           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>threadHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Check if <a class="el" href="pte__generic__osal_8h.html#28ea17c5ecaaebf7f9b195a91a709e77">pte_osThreadCancel()</a> has been called on the specified thread.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>threadHandle</em>&nbsp;</td><td>handle of thread to check the state of.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - Thread has not been cancelled <p>
++PTE_OS_INTERRUPTED - Thread has been cancelled. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="d1dafbe4855b28a472af00b693338a44"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadCreate" ref="d1dafbe4855b28a472af00b693338a44" args="(pte_osThreadEntryPoint entryPoint, int stackSize, int initialPriority, void *argv, pte_osThreadHandle *ppte_osThreadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadCreate           </td>
++          <td>(</td>
++          <td class="paramtype"><a class="el" href="pte__generic__osal_8h.html#351fe193de41b62d05e1aa19a3bf1a45">pte_osThreadEntryPoint</a>&nbsp;</td>
++          <td class="paramname"> <em>entryPoint</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>stackSize</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>initialPriority</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">void *&nbsp;</td>
++          <td class="paramname"> <em>argv</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">pte_osThreadHandle *&nbsp;</td>
++          <td class="paramname"> <em>ppte_osThreadHandle</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Creates a new thread. The thread must be started in a suspended state - it will be explicitly started when <a class="el" href="pte__generic__osal_8h.html#ab292e786c9b96e80daf8ae9dc983a72">pte_osThreadStart()</a> is called.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>entryPoint</em>&nbsp;</td><td>Entry point to the new thread. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>stackSize</em>&nbsp;</td><td>The initial stack size, in bytes. Note that this can be considered a minimum - for instance if the OS requires a larger stack space than what the caller specified. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>initialPriority</em>&nbsp;</td><td>The priority that the new thread should be initially set to. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Parameter to pass to the new thread. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>ppte_osThreadHandle</em>&nbsp;</td><td>set to the handle of the new thread.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - New thread successfully created. <p>
++PTE_OS_NO_RESOURCESs - Insufficient resources to create thread </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="685d89f40949c634169c4a7d13de4ee0"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadDelete" ref="685d89f40949c634169c4a7d13de4ee0" args="(pte_osThreadHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadDelete           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Frees resources associated with the specified thread. This is called after the thread has terminated and is no longer needed (e.g. after pthread_join returns). This call will always be made from a different context than that of the target thread. 
++</div>
++</div><p>
++<a class="anchor" name="efffdffc7923dbbdb5b930cd24c852d1"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadExit" ref="efffdffc7923dbbdb5b930cd24c852d1" args="()" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">void pte_osThreadExit           </td>
++          <td>(</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Causes the current thread to stop executing.<p>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>Never returns (thread terminated) </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="cdbcc3abdb03e1a0f6475d5c0759dac7"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadExitAndDelete" ref="cdbcc3abdb03e1a0f6475d5c0759dac7" args="(pte_osThreadHandle handle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadExitAndDelete           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>handle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Frees resources associated with the specified thread and then causes the thread to exit. This is called after the thread has terminated and is no longer needed (e.g. after pthread_join returns). This call will always be made from the context of the target thread. 
++</div>
++</div><p>
++<a class="anchor" name="b07cacaf7670707cc2741f5d9746571b"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadGetDefaultPriority" ref="b07cacaf7670707cc2741f5d9746571b" args="()" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osThreadGetDefaultPriority           </td>
++          <td>(</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Returns the priority that should be used if the caller to pthread_create doesn't explicitly set one. 
++</div>
++</div><p>
++<a class="anchor" name="8e8f80b5c86e1357ce0b40d8333ec969"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadGetHandle" ref="8e8f80b5c86e1357ce0b40d8333ec969" args="(void)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">pte_osThreadHandle pte_osThreadGetHandle           </td>
++          <td>(</td>
++          <td class="paramtype">void&nbsp;</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Returns the handle of the currently executing thread. 
++</div>
++</div><p>
++<a class="anchor" name="18cd3561b14611ae16682cbbbf674980"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadGetMaxPriority" ref="18cd3561b14611ae16682cbbbf674980" args="()" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osThreadGetMaxPriority           </td>
++          <td>(</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Returns the maximum allowable priority 
++</div>
++</div><p>
++<a class="anchor" name="913badc3cfa6b2a817c2b501d45548fc"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadGetMinPriority" ref="913badc3cfa6b2a817c2b501d45548fc" args="()" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osThreadGetMinPriority           </td>
++          <td>(</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Returns the minimum allowable priority 
++</div>
++</div><p>
++<a class="anchor" name="54fce783cb811dc6458ea118ab8f7f1d"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadGetPriority" ref="54fce783cb811dc6458ea118ab8f7f1d" args="(pte_osThreadHandle threadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">int pte_osThreadGetPriority           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>threadHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Returns the priority of the specified thread. 
++</div>
++</div><p>
++<a class="anchor" name="6782a421eb6c2eb9aa60f3b7ccca1f99"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadSetPriority" ref="6782a421eb6c2eb9aa60f3b7ccca1f99" args="(pte_osThreadHandle threadHandle, int newPriority)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadSetPriority           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>threadHandle</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">int&nbsp;</td>
++          <td class="paramname"> <em>newPriority</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Sets the priority of the specified thread.<p>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - thread priority successfully set </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="5c722b6d1840babcdf9dd1d343eab839"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadSleep" ref="5c722b6d1840babcdf9dd1d343eab839" args="(unsigned int msecs)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">void pte_osThreadSleep           </td>
++          <td>(</td>
++          <td class="paramtype">unsigned int&nbsp;</td>
++          <td class="paramname"> <em>msecs</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Causes the current thread to sleep for the specified number of milliseconds. 
++</div>
++</div><p>
++<a class="anchor" name="ab292e786c9b96e80daf8ae9dc983a72"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadStart" ref="ab292e786c9b96e80daf8ae9dc983a72" args="(pte_osThreadHandle osThreadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadStart           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>osThreadHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Starts executing the specified thread.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>osThreadHandle</em>&nbsp;</td><td>handle of the thread to start.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - thread successfully started. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="0bcce6dc9b22691f914b07894394ee38"></a><!-- doxytag: member="pte_generic_osal.h::pte_osThreadWaitForEnd" ref="0bcce6dc9b22691f914b07894394ee38" args="(pte_osThreadHandle threadHandle)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osThreadWaitForEnd           </td>
++          <td>(</td>
++          <td class="paramtype">pte_osThreadHandle&nbsp;</td>
++          <td class="paramname"> <em>threadHandle</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Waits for the specified thread to end. If the thread has already terminated, this returns immediately.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>threadHandle</em>&nbsp;</td><td>Handle fo thread to wait for.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - specified thread terminated. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="851a24e2dc4fe5c61e00c9dc7105d607"></a><!-- doxytag: member="pte_generic_osal.h::pte_osTlsAlloc" ref="851a24e2dc4fe5c61e00c9dc7105d607" args="(unsigned int *pKey)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osTlsAlloc           </td>
++          <td>(</td>
++          <td class="paramtype">unsigned int *&nbsp;</td>
++          <td class="paramname"> <em>pKey</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Allocates a new TLS key.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>pKey</em>&nbsp;</td><td>On success will be set to the newly allocated key.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - TLS key successfully allocated. <p>
++PTE_OS_NO_RESOURCESs - Insufficient resources to allocate key (e.g. maximum number of keys reached). </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="a96a7e24fee6ba3c37c13d8429044a58"></a><!-- doxytag: member="pte_generic_osal.h::pte_osTlsFree" ref="a96a7e24fee6ba3c37c13d8429044a58" args="(unsigned int key)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osTlsFree           </td>
++          <td>(</td>
++          <td class="paramtype">unsigned int&nbsp;</td>
++          <td class="paramname"> <em>key</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Frees the specified TLS key.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>index</em>&nbsp;</td><td>TLS key to free</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>PTE_OS_OK - TLS key was successfully freed. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="44051eabc72d953a731c7c559d9c99c7"></a><!-- doxytag: member="pte_generic_osal.h::pte_osTlsGetValue" ref="44051eabc72d953a731c7c559d9c99c7" args="(unsigned int key)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">void* pte_osTlsGetValue           </td>
++          <td>(</td>
++          <td class="paramtype">unsigned int&nbsp;</td>
++          <td class="paramname"> <em>key</em>          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Retrieves the thread specific value for the specified key for the currently executing thread. If a value has not been set for this key, NULL should be returned (i.e. TLS values default to NULL).<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>index</em>&nbsp;</td><td>The TLS key for the value.</td></tr>
++  </table>
++</dl>
++<dl class="return" compact><dt><b>Returns:</b></dt><dd>The value associated with <code>key</code> for the current thread. </dd></dl>
++
++</div>
++</div><p>
++<a class="anchor" name="4369875ed4b8d89a72a9b14a811af3ad"></a><!-- doxytag: member="pte_generic_osal.h::pte_osTlsInit" ref="4369875ed4b8d89a72a9b14a811af3ad" args="(void)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname">void pte_osTlsInit           </td>
++          <td>(</td>
++          <td class="paramtype">void&nbsp;</td>
++          <td class="paramname">          </td>
++          <td>&nbsp;)&nbsp;</td>
++          <td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Initializes the OS TLS support. This is called by the PTE library prior to performing ANY TLS operation. 
++</div>
++</div><p>
++<a class="anchor" name="875ea911d219532ca4da65430e73d22e"></a><!-- doxytag: member="pte_generic_osal.h::pte_osTlsSetValue" ref="875ea911d219532ca4da65430e73d22e" args="(unsigned int key, void *value)" -->
++<div class="memitem">
++<div class="memproto">
++      <table class="memname">
++        <tr>
++          <td class="memname"><a class="el" href="pte__generic__osal_8h.html#8434ef5479b09bf1d5d1bf2eb078e16b">pte_osResult</a> pte_osTlsSetValue           </td>
++          <td>(</td>
++          <td class="paramtype">unsigned int&nbsp;</td>
++          <td class="paramname"> <em>key</em>, </td>
++        </tr>
++        <tr>
++          <td class="paramkey"></td>
++          <td></td>
++          <td class="paramtype">void *&nbsp;</td>
++          <td class="paramname"> <em>value</em></td><td>&nbsp;</td>
++        </tr>
++        <tr>
++          <td></td>
++          <td>)</td>
++          <td></td><td></td><td width="100%"></td>
++        </tr>
++      </table>
++</div>
++<div class="memdoc">
++
++<p>
++Sets the thread specific value for the specified key for the currently executing thread.<p>
++<dl compact><dt><b>Parameters:</b></dt><dd>
++  <table border="0" cellspacing="2" cellpadding="0">
++    <tr><td valign="top"></td><td valign="top"><em>index</em>&nbsp;</td><td>The TLS key for the value. </td></tr>
++    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>The value to save </td></tr>
++  </table>
++</dl>
++
++</div>
++</div><p>
++<hr size="1"><address style="text-align: right;"><small>Generated on Mon Apr 7 21:56:48 2008 for PTE by&nbsp;
++<a href="http://www.doxygen.org/index.html">
++<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.3 </small></address>
++</body>
++</html>
+diff -Naur a/doc/pte_users_guide.html b/doc/pte_users_guide.html
+--- a/doc/pte_users_guide.html	1970-01-01 10:00:00.000000000 +1000
++++ b/doc/pte_users_guide.html	2020-05-24 16:12:05.845107212 +1000
+@@ -0,0 +1,33 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
++<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>PTE User's Guide</title></head><body><br><big style="font-weight: bold;"><big>PTE Users Guide</big></big><br><br>Since
++PTE is designed to be cross platform, and embedded OS's vary widely in
++their build methodology, there is no "high level" build structure
++included. &nbsp;Rather, each port is responsible for providing this.
++&nbsp;The sections below describe using PTE for a specific platform.<br><br>While
++pthreads is strictly speaking a C API, PTE does include limited support
++for C++ specific features, specifically exceptions. &nbsp;This
++functionality was primarily inherited from the original code base
++(Pthreads-win32) and has been only preliminarily tested.<br><br>An
++important component of PTE is the test library that is included.
++&nbsp;Each platform contains build files as described below to build
++the test suite.<br><big style="font-weight: bold; font-style: italic;"><br>DSP/BIOS</big><br>Texas
++Instruments provides DSP/BIOS as a RTOS to be used on their series of
++digital signal processors. &nbsp;Two project files are included: one
++for the library itself and one for the test suite. &nbsp;These projects
++(and CDB/TCF files) were targeted towards the C6000 simulator, as this
++is where I did all of the development. &nbsp;When building applications
++that use the PTE library, you will need to include pthreads.h and will
++also need to provide a path to pte-types.h (originally located in
++platforms/dspbios/pte-types.h). &nbsp;This file contains definitions of
++structures and types (e.g. pid_t) that are required by pthreads but not
++supplied by DSP/BIOS<br><big style="font-weight: bold; font-style: italic;"><br>PSP OS</big><br>This
++is the operating system used by the Sony PSP. &nbsp;The PSP toolchain
++is gcc based and thus shares many similarities with a "typical" UNIX
++system, including the build system. &nbsp;PTE includes Makefiles for
++the library itself as well as the test suite. &nbsp;Note that these
++Makefiles are pretty rudimentary as I am not anywhere close to being a
++Makefile expert. &nbsp;Thus, once the library is built it will be
++necessary to copy the library itself, pthread.h and pte-types.h to the
++appropriate places in your projects build structure. &nbsp;The PSP
++toolchain includes a pthread.h header in the base distribution (why,
++I'm not sure) - it is important that you use the pthread.hsupplied with PTE rather than the one in the toolchain. <br><br></body></html>
+\ No newline at end of file
+diff -Naur a/implement.h b/implement.h
+--- a/implement.h	2008-04-05 06:14:46.000000000 +1000
++++ b/implement.h	2020-05-24 16:12:05.845107212 +1000
+@@ -85,7 +85,7 @@
+ struct pte_thread_t_
+   {
+     pte_osThreadHandle threadId;      /* OS specific thread handle */
+-    pthread_t ptHandle;		/* This thread's permanent pthread_t handle */
++    // pthread_t ptHandle;		/* This thread's permanent pthread_t handle */
+     pte_thread_t * prevReuse;	/* Links threads on reuse stack */
+     volatile PThreadState state;
+     void *exitStatus;
+@@ -105,6 +105,8 @@
+     1;
+     void *keys;
+     void *nextAssoc;
++
++    unsigned int x;             /* Extra information - reuse count etc */
+   };
+ 
+ 
+diff -Naur a/platform/psp/.gitignore b/platform/psp/.gitignore
+--- a/platform/psp/.gitignore	1970-01-01 10:00:00.000000000 +1000
++++ b/platform/psp/.gitignore	2020-05-24 16:12:05.849107212 +1000
+@@ -0,0 +1 @@
++libpthread-psp.a
+\ No newline at end of file
+diff -Naur a/platform/psp/Makefile b/platform/psp/Makefile
+--- a/platform/psp/Makefile	2008-04-05 14:04:53.000000000 +1000
++++ b/platform/psp/Makefile	2020-05-24 21:19:47.933572761 +1000
+@@ -5,6 +5,10 @@
+ VPATH = ../..:../helper
+ 
+ TARGET_LIB = libpthread-psp.a
++PREFIX = $(psp-config --psp-prefix)
++LIB_DIR = $(PREFIX)/lib
++INCLUDE_DIR = $(PREFIX)/include
++INSTALL = /usr/bin/install
+ 
+ 
+ MUTEX_OBJS = \
+@@ -187,8 +191,12 @@
+ 
+ endif
+ 
++test :
++	make -C ../../tests test
++
+ install: $(TARGET_LIB)
+-	@cp -v $(TARGET_LIB) `psp-config --psp-prefix`/lib
+-	@cp -v *.h `psp-config --psp-prefix`/include
++	$(INSTALL) -d $(LIB_DIR)
++	$(INSTALL) $(TARGET_LIB) $(LIB_DIR)
++	$(INSTALL) -d $(INCLUDE_DIR)
++	$(INSTALL) *.h $(INCLUDE_DIR)
+ 	@echo "Done."
+-
+diff -Naur a/pte_callUserDestroyRoutines.c b/pte_callUserDestroyRoutines.c
+--- a/pte_callUserDestroyRoutines.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_callUserDestroyRoutines.c	2020-05-24 16:12:05.849107212 +1000
+@@ -75,11 +75,11 @@
+ {
+   ThreadKeyAssoc * assoc;
+ 
+-  if (thread.p != NULL)
++  if (thread != NULL)
+     {
+       int assocsRemaining;
+       int iterations = 0;
+-      pte_thread_t * sp = (pte_thread_t *) thread.p;
++      pte_thread_t * sp = (pte_thread_t *) thread;
+ 
+       /*
+        * Run through all Thread<-->Key associations
+diff -Naur a/pte_cancellable_wait.c b/pte_cancellable_wait.c
+--- a/pte_cancellable_wait.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_cancellable_wait.c	2020-05-24 16:12:05.849107212 +1000
+@@ -56,7 +56,7 @@
+   pte_thread_t * sp;
+ 
+   self = pthread_self();
+-  sp = (pte_thread_t *) self.p;
++  sp = (pte_thread_t *) self;
+ 
+   if (sp != NULL)
+     {
+diff -Naur a/pte_detach.c b/pte_detach.c
+--- a/pte_detach.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_detach.c	2020-05-24 16:12:05.849107212 +1000
+@@ -57,7 +57,7 @@
+       if (sp != NULL) // otherwise OS thread with no implicit POSIX handle.
+         {
+ 
+-          pte_callUserDestroyRoutines (sp->ptHandle);
++          pte_callUserDestroyRoutines (sp);
+ 
+           (void) pthread_mutex_lock (&sp->cancelLock);
+           sp->state = PThreadStateLast;
+@@ -72,11 +72,11 @@
+             {
+               if (threadShouldExit)
+                 {
+-                  pte_threadExitAndDestroy (sp->ptHandle);
++                  pte_threadExitAndDestroy (sp);
+                 }
+               else
+                 {
+-                  pte_threadDestroy (sp->ptHandle);
++                  pte_threadDestroy (sp);
+                 }
+ 
+               // pte_osTlsSetValue (pte_selfThreadKey->key, NULL);
+diff -Naur a/pte_new.c b/pte_new.c
+--- a/pte_new.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_new.c	2020-05-24 16:12:05.849107212 +1000
+@@ -52,7 +52,7 @@
+ pte_new (void)
+ {
+   pthread_t t;
+-  pthread_t nil = {NULL, 0};
++  pthread_t nil = NULL;
+   pte_thread_t * tp;
+ 
+   /*
+@@ -60,9 +60,9 @@
+    */
+   t = pte_threadReusePop ();
+ 
+-  if (NULL != t.p)
++  if (NULL != t)
+     {
+-      tp = (pte_thread_t *) t.p;
++      tp = (pte_thread_t *) t;
+     }
+   else
+     {
+@@ -75,8 +75,8 @@
+         }
+ 
+       /* ptHandle.p needs to point to it's parent pte_thread_t. */
+-      t.p = tp->ptHandle.p = tp;
+-      t.x = tp->ptHandle.x = 0;
++      t = tp;
++      tp->x = 0;
+     }
+ 
+   /* Set default state. */
+diff -Naur a/pte_reuse.c b/pte_reuse.c
+--- a/pte_reuse.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_reuse.c	2020-05-24 16:12:05.849107212 +1000
+@@ -84,7 +84,7 @@
+ pthread_t
+ pte_threadReusePop (void)
+ {
+-  pthread_t t = {NULL, 0};
++  pthread_t t = NULL;
+ 
+ 
+   pte_osMutexLock (pte_thread_reuse_lock);
+@@ -104,7 +104,7 @@
+ 
+       tp->prevReuse = NULL;
+ 
+-      t = tp->ptHandle;
++      t = tp;
+     }
+ 
+   pte_osMutexUnlock(pte_thread_reuse_lock);
+@@ -122,23 +122,23 @@
+ void
+ pte_threadReusePush (pthread_t thread)
+ {
+-  pte_thread_t * tp = (pte_thread_t *) thread.p;
++  pte_thread_t * tp = (pte_thread_t *) thread;
+   pthread_t t;
+ 
+ 
+   pte_osMutexLock (pte_thread_reuse_lock);
+ 
+-  t = tp->ptHandle;
++  t = tp;
+   memset(tp, 0, sizeof(pte_thread_t));
+ 
+   /* Must restore the original POSIX handle that we just wiped. */
+-  tp->ptHandle = t;
++  tp = t;
+ 
+   /* Bump the reuse counter now */
+ #ifdef PTE_THREAD_ID_REUSE_INCREMENT
+-  tp->ptHandle.x += PTE_THREAD_ID_REUSE_INCREMENT;
++  tp->x += PTE_THREAD_ID_REUSE_INCREMENT;
+ #else
+-  tp->ptHandle.x++;
++  tp->x++;
+ #endif
+ 
+   tp->prevReuse = PTE_THREAD_REUSE_EMPTY;
+diff -Naur a/pte_threadDestroy.c b/pte_threadDestroy.c
+--- a/pte_threadDestroy.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_threadDestroy.c	2020-05-24 16:12:05.849107212 +1000
+@@ -53,7 +53,7 @@
+ static void
+ pte_threadDestroyCommon (pthread_t thread, unsigned char shouldThreadExit)
+ {
+-  pte_thread_t * tp = (pte_thread_t *) thread.p;
++  pte_thread_t * tp = (pte_thread_t *) thread;
+   pte_thread_t threadCopy;
+ 
+   if (tp != NULL)
+diff -Naur a/pte_threadStart.c b/pte_threadStart.c
+--- a/pte_threadStart.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pte_threadStart.c	2020-05-24 16:12:05.849107212 +1000
+@@ -92,7 +92,7 @@
+   void * status = (void *) 0;
+ 
+   self = threadParms->tid;
+-  sp = (pte_thread_t *) self.p;
++  sp = (pte_thread_t *) self;
+   start = threadParms->start;
+   arg = threadParms->arg;
+ //  free (threadParms);
+diff -Naur a/pthread_cancel.c b/pthread_cancel.c
+--- a/pthread_cancel.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_cancel.c	2020-05-24 16:12:05.849107212 +1000
+@@ -80,7 +80,7 @@
+       return result;
+     }
+ 
+-  if ((self = pthread_self ()).p == NULL)
++  if ((self = pthread_self ()) == NULL)
+     {
+       return ENOMEM;
+     };
+@@ -101,7 +101,7 @@
+    */
+   cancel_self = pthread_equal (thread, self);
+ 
+-  tp = (pte_thread_t *) thread.p;
++  tp = (pte_thread_t *) thread;
+ 
+   /*
+    * Lock for async-cancel safety.
+diff -Naur a/pthread_delay_np.c b/pthread_delay_np.c
+--- a/pthread_delay_np.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_delay_np.c	2020-05-24 16:12:05.849107212 +1000
+@@ -117,12 +117,12 @@
+ 
+   wait_time = secs_in_millisecs + millisecs;
+ 
+-  if (NULL == (self = pthread_self ()).p)
++  if (NULL == (self = pthread_self ()))
+     {
+       return ENOMEM;
+     }
+ 
+-  sp = (pte_thread_t *) self.p;
++  sp = (pte_thread_t *) self;
+ 
+   if (sp->cancelState == PTHREAD_CANCEL_ENABLE)
+     {
+diff -Naur a/pthread_detach.c b/pthread_detach.c
+--- a/pthread_detach.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_detach.c	2020-05-24 16:12:05.849107212 +1000
+@@ -75,13 +75,13 @@
+ {
+   int result;
+   unsigned char destroyIt = PTE_FALSE;
+-  pte_thread_t * tp = (pte_thread_t *) thread.p;
++  pte_thread_t * tp = (pte_thread_t *) thread;
+ 
+ 
+   pte_osMutexLock (pte_thread_reuse_lock);
+ 
+   if (NULL == tp
+-      || thread.x != tp->ptHandle.x)
++      || ((pte_thread_t*)thread)->x != tp->x)
+     {
+       result = ESRCH;
+     }
+diff -Naur a/pthread_equal.c b/pthread_equal.c
+--- a/pthread_equal.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_equal.c	2020-05-24 16:12:05.849107212 +1000
+@@ -75,7 +75,7 @@
+    * We also accept NULL == NULL - treating NULL as a thread
+    * for this special case, because there is no error that we can return.
+    */
+-  result = ( t1.p == t2.p && t1.x == t2.x );
++  result = ( t1 == t2 && ((pte_thread_t*)t1)->x == ((pte_thread_t*)t2)->x );
+ 
+   return (result);
+ 
+diff -Naur a/pthread_getschedparam.c b/pthread_getschedparam.c
+--- a/pthread_getschedparam.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_getschedparam.c	2020-05-24 16:12:05.849107212 +1000
+@@ -75,7 +75,7 @@
+    * for the target thread. It must not return the actual thread
+    * priority as altered by any system priority adjustments etc.
+    */
+-  param->sched_priority = ((pte_thread_t *)thread.p)->sched_priority;
++  param->sched_priority = ((pte_thread_t *)thread)->sched_priority;
+ 
+   return 0;
+ }
+diff -Naur a/pthread.h b/pthread.h
+--- a/pthread.h	2008-04-05 14:04:53.000000000 +1000
++++ b/pthread.h	2020-05-24 16:12:05.849107212 +1000
+@@ -398,7 +398,7 @@
+         unsigned int x;             /* Extra information - reuse count etc */
+       } pte_handle_t;
+ 
+-    typedef pte_handle_t pthread_t;
++    typedef /* pte_handle_t */ void * pthread_t;
+     typedef struct pthread_attr_t_ * pthread_attr_t;
+     typedef struct pthread_once_t_ pthread_once_t;
+     typedef struct pthread_key_t_ * pthread_key_t;
+@@ -654,6 +654,10 @@
+ 
+ #endif /* PTE_CLEANUP_C */
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif /* __cplusplus */
++
+     /*
+      * ===============
+      * ===============
+@@ -960,6 +964,10 @@
+ 
+ #endif /*PTE_LEVEL >= PTE_LEVEL_MAX - 1 */
+ 
++#ifdef __cplusplus
++}
++#endif /* cplusplus */
++
+ #if PTE_LEVEL >= PTE_LEVEL_MAX
+ 
+ 
+diff -Naur a/pthread_join.c b/pthread_join.c
+--- a/pthread_join.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_join.c	2020-05-24 16:12:05.849107212 +1000
+@@ -85,13 +85,13 @@
+ {
+   int result;
+   pthread_t self;
+-  pte_thread_t * tp = (pte_thread_t *) thread.p;
++  pte_thread_t * tp = (pte_thread_t *) thread;
+ 
+ 
+   pte_osMutexLock (pte_thread_reuse_lock);
+ 
+   if (NULL == tp
+-      || thread.x != tp->ptHandle.x)
++      || ((pte_thread_t*)thread)->x != tp->x)
+     {
+       result = ESRCH;
+     }
+@@ -113,7 +113,7 @@
+        */
+       self = pthread_self();
+ 
+-      if (NULL == self.p)
++      if (NULL == self)
+         {
+           result = ENOENT;
+         }
+diff -Naur a/pthread_kill.c b/pthread_kill.c
+--- a/pthread_kill.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_kill.c	2020-05-24 16:12:05.849107212 +1000
+@@ -83,10 +83,10 @@
+ 
+   pte_osMutexLock (pte_thread_reuse_lock);
+ 
+-  tp = (pte_thread_t *) thread.p;
++  tp = (pte_thread_t *) thread;
+ 
+   if (NULL == tp
+-      || thread.x != tp->ptHandle.x
++      || ((pte_thread_t*)thread)->x != tp->x
+       || 0 == tp->threadId)
+     {
+       result = ESRCH;
+diff -Naur a/pthread_mutex_init.c b/pthread_mutex_init.c
+--- a/pthread_mutex_init.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_mutex_init.c	2020-05-24 16:12:05.849107212 +1000
+@@ -71,7 +71,7 @@
+       mx->recursive_count = 0;
+       mx->kind = (attr == NULL || *attr == NULL
+                   ? PTHREAD_MUTEX_DEFAULT : (*attr)->kind);
+-      mx->ownerThread.p = NULL;
++      mx->ownerThread = NULL;
+ 
+       pte_osSemaphoreCreate(0,&mx->handle);
+ 
+diff -Naur a/pthread_mutex_unlock.c b/pthread_mutex_unlock.c
+--- a/pthread_mutex_unlock.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_mutex_unlock.c	2020-05-24 16:12:05.849107212 +1000
+@@ -103,7 +103,7 @@
+               if (mx->kind != PTHREAD_MUTEX_RECURSIVE
+                   || 0 == --mx->recursive_count)
+                 {
+-                  mx->ownerThread.p = NULL;
++                  mx->ownerThread = NULL;
+ 
+                   if (PTE_ATOMIC_EXCHANGE (&mx->lock_idx,0) < 0)
+                     {
+diff -Naur a/pthread_self.c b/pthread_self.c
+--- a/pthread_self.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_self.c	2020-05-24 16:12:05.849107212 +1000
+@@ -75,7 +75,7 @@
+ 
+   if (sp != NULL)
+     {
+-      self = sp->ptHandle;
++      self = sp;
+     }
+   else
+     {
+@@ -88,7 +88,7 @@
+        * by pte_new!
+        */
+       self = pte_new ();
+-      sp = (pte_thread_t *) self.p;
++      sp = (pte_thread_t *) self;
+ 
+       if (sp != NULL)
+         {
+diff -Naur a/pthread_setcancelstate.c b/pthread_setcancelstate.c
+--- a/pthread_setcancelstate.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_setcancelstate.c	2020-05-24 16:12:05.849107212 +1000
+@@ -87,7 +87,7 @@
+ {
+   int result = 0;
+   pthread_t self = pthread_self ();
+-  pte_thread_t * sp = (pte_thread_t *) self.p;
++  pte_thread_t * sp = (pte_thread_t *) self;
+ 
+   if (sp == NULL
+       || (state != PTHREAD_CANCEL_ENABLE && state != PTHREAD_CANCEL_DISABLE))
+diff -Naur a/pthread_setcanceltype.c b/pthread_setcanceltype.c
+--- a/pthread_setcanceltype.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_setcanceltype.c	2020-05-24 16:12:05.849107212 +1000
+@@ -88,7 +88,7 @@
+ {
+   int result = 0;
+   pthread_t self = pthread_self ();
+-  pte_thread_t * sp = (pte_thread_t *) self.p;
++  pte_thread_t * sp = (pte_thread_t *) self;
+ 
+ #ifndef PTE_SUPPORT_ASYNC_CANCEL
+   if (type == PTHREAD_CANCEL_ASYNCHRONOUS)
+diff -Naur a/pthread_setschedparam.c b/pthread_setschedparam.c
+--- a/pthread_setschedparam.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_setschedparam.c	2020-05-24 16:12:05.849107212 +1000
+@@ -78,7 +78,7 @@
+ {
+   int prio;
+   int result;
+-  pte_thread_t * tp = (pte_thread_t *) thread.p;
++  pte_thread_t * tp = (pte_thread_t *) thread;
+ 
+   prio = priority;
+ 
+diff -Naur a/pthread_setspecific.c b/pthread_setspecific.c
+--- a/pthread_setspecific.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_setspecific.c	2020-05-24 16:12:05.849107212 +1000
+@@ -84,7 +84,7 @@
+        * thread if one wasn't explicitly created
+        */
+       self = pthread_self ();
+-      if (self.p == NULL)
++      if (self == NULL)
+         {
+           return ENOENT;
+         }
+@@ -108,7 +108,7 @@
+         }
+       else
+         {
+-          self = sp->ptHandle;
++          self = sp;
+         }
+     }
+ 
+@@ -116,7 +116,7 @@
+ 
+   if (key != NULL)
+     {
+-      if (self.p != NULL && key->destructor != NULL && value != NULL)
++      if (self != NULL && key->destructor != NULL && value != NULL)
+         {
+           /*
+            * Only require associations if we have to
+@@ -131,7 +131,7 @@
+ 
+           if (pthread_mutex_lock(&(key->keyLock)) == 0)
+             {
+-              pte_thread_t * sp = (pte_thread_t *) self.p;
++              pte_thread_t * sp = (pte_thread_t *) self;
+ 
+               (void) pthread_mutex_lock(&(sp->threadLock));
+ 
+diff -Naur a/pthread_testcancel.c b/pthread_testcancel.c
+--- a/pthread_testcancel.c	2008-04-05 06:14:46.000000000 +1000
++++ b/pthread_testcancel.c	2020-05-24 16:12:05.853107212 +1000
+@@ -75,7 +75,7 @@
+  */
+ {
+   pthread_t self = pthread_self ();
+-  pte_thread_t * sp = (pte_thread_t *) self.p;
++  pte_thread_t * sp = (pte_thread_t *) self;
+ 
+   if (sp == NULL)
+     {
